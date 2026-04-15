@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Air Quality Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons for modern icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="background-mesh">
+        <div class="mesh-blob blob-1"></div>
+        <div class="mesh-blob blob-2"></div>
+        <div class="mesh-blob blob-3"></div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar or Header -->
+        <header class="dashboard-header glass-panel">
+            <div class="logo-area">
+                <i class="ph-fill ph-wind"></i>
+                <div class="titles">
+                    <h1>AeroSense</h1>
+                    <span>Real-Time Air Quality Monitoring</span>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="search-container glass-panel">
+                    <i class="ph ph-map-pin"></i>
+                    <input type="text" id="location-input" placeholder="Search City..." value="Dhaka, Bangladesh">
+                    <button id="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+                </div>
+                <div class="live-indicator">
+                    <div class="pulse-dot"></div>
+                    <span>LIVE</span>
+                </div>
+                <div class="time-display" id="clock">--:--:--</div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Left Column: Primary AQI & Details -->
+            <section class="primary-section">
+                <!-- Main AQI Card -->
+                <div class="glass-card aqi-card widget" id="main-aqi-card">
+                    <div class="card-header">
+                        <h2>Overall AQI</h2>
+                        <i class="ph ph-info"></i>
+                    </div>
+                    <div class="aqi-display">
+                        <div class="circular-progress">
+                            <svg class="progress-ring" width="160" height="160">
+                                <circle class="progress-ring__circle bg-circle" stroke-width="12" fill="transparent" r="70" cx="80" cy="80"/>
+                                <circle class="progress-ring__circle p-circle" id="aqi-ring" stroke-width="12" fill="transparent" r="70" cx="80" cy="80"/>
+                            </svg>
+                            <div class="aqi-value-container">
+                                <span class="aqi-value" id="current-aqi">142</span>
+                                <span class="aqi-unit">US AQI</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aqi-status">
+                        <h3 id="aqi-status-text">Unhealthy for Sensitive Groups</h3>
+                        <p id="aqi-status-desc">Active children and adults, and people with respiratory disease, such as asthma, should limit prolonged outdoor exertion.</p>
+                    </div>
+                </div>
+
+                <!-- Weather Status Card -->
+                <div class="glass-card weather-card widget">
+                    <div class="card-header">
+                        <h2>Microclimate</h2>
+                    </div>
+                    <div class="weather-grid">
+                        <div class="weather-item">
+                            <i class="ph ph-thermometer"></i>
+                            <div class="w-info">
+                                <span class="w-label">Temperature</span>
+                                <span class="w-value" id="temp-val">28°C</span>
+                            </div>
+                        </div>
+                        <div class="weather-item">
+                            <i class="ph ph-drop"></i>
+                            <div class="w-info">
+                                <span class="w-label">Humidity</span>
+                                <span class="w-value" id="humid-val">65%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Graphs and Pollutants Grid -->
+            <section class="secondary-section">
+                <!-- Graph Card -->
+                <div class="glass-card graph-card widget">
+                    <div class="card-header">
+                        <h2>AQI Trend (Last 24h)</h2>
+                        <div class="chart-controls">
+                            <button class="active">AQI</button>
+                            <button>PM2.5</button>
+                            <button>PM10</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="aqiChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Pollutants Grid -->
+                <div class="pollutants-grid">
+                    <div class="glass-card p-card widget">
+                        <div class="p-header">
+                            <span class="p-name">PM2.5</span>
+                            <span class="p-status warning">High</span>
+                        </div>
+                        <div class="p-value">
+                            <span id="pm25-val">52.4</span>
+                            <span class="p-unit">µg/m³</span>
+                        </div>
+                        <div class="p-bar"><div class="p-fill warning-bg" style="width: 75%"></div></div>
+                    </div>
+
+                    <div class="glass-card p-card widget">
+                        <div class="p-header">
+                            <span class="p-name">PM10</span>
+                            <span class="p-status default">Moderate</span>
+                        </div>
+                        <div class="p-value">
+                            <span id="pm10-val">84.1</span>
+                            <span class="p-unit">µg/m³</span>
+                        </div>
+                        <div class="p-bar"><div class="p-fill default-bg" style="width: 45%"></div></div>
+                    </div>
+
+                    <div class="glass-card p-card widget">
+                        <div class="p-header">
+                            <span class="p-name">NO2</span>
+                            <span class="p-status good">Good</span>
+                        </div>
+                        <div class="p-value">
+                            <span id="no2-val">12.8</span>
+                            <span class="p-unit">ppb</span>
+                        </div>
+                        <div class="p-bar"><div class="p-fill good-bg" style="width: 20%"></div></div>
+                    </div>
+
+                    <div class="glass-card p-card widget">
+                        <div class="p-header">
+                            <span class="p-name">O3</span>
+                            <span class="p-status good">Good</span>
+                        </div>
+                        <div class="p-value">
+                            <span id="o3-val">28.5</span>
+                            <span class="p-unit">ppb</span>
+                        </div>
+                        <div class="p-bar"><div class="p-fill good-bg" style="width: 35%"></div></div>
+                    </div>
+                    
+                    <div class="glass-card p-card widget">
+                        <div class="p-header">
+                            <span class="p-name">CO</span>
+                            <span class="p-status good">Good</span>
+                        </div>
+                        <div class="p-value">
+                            <span id="co-val">0.4</span>
+                            <span class="p-unit">ppm</span>
+                        </div>
+                        <div class="p-bar"><div class="p-fill good-bg" style="width: 15%"></div></div>
+                    </div>
+
+                    <div class="glass-card p-card widget">
+                        <div class="p-header">
+                            <span class="p-name">SO2</span>
+                            <span class="p-status good">Good</span>
+                        </div>
+                        <div class="p-value">
+                            <span id="so2-val">2.1</span>
+                            <span class="p-unit">ppb</span>
+                        </div>
+                        <div class="p-bar"><div class="p-fill good-bg" style="width: 10%"></div></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

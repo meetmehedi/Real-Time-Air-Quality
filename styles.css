@@ -1,0 +1,572 @@
+:root {
+    /* Color Palette */
+    --bg-dark: #0f172a;
+    --bg-darker: #020617;
+    
+    --glass-bg: rgba(30, 41, 59, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    
+    --accent: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.5);
+
+    /* Status Colors */
+    --good: #10b981;
+    --good-bg: rgba(16, 185, 129, 0.2);
+    --moderate: #f59e0b;
+    --moderate-bg: rgba(245, 158, 11, 0.2);
+    --unhealthy-sg: #f97316;
+    --unhealthy-sg-bg: rgba(249, 115, 22, 0.2);
+    --unhealthy: #ef4444;
+    --unhealthy-bg: rgba(239, 68, 68, 0.2);
+    --very-unhealthy: #8b5cf6;
+    --very-unhealthy-bg: rgba(139, 92, 246, 0.2);
+    --hazardous: #881337;
+    --hazardous-bg: rgba(136, 19, 55, 0.2);
+
+    /* Fonts */
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-darker);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Background Mesh Gradients */
+.background-mesh {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: #020617;
+}
+
+.mesh-blob {
+    position: absolute;
+    filter: blur(100px);
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: float 20s infinite ease-in-out alternate;
+}
+
+.blob-1 {
+    top: -10%; left: -10%;
+    width: 50vw; height: 50vw;
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.blob-2 {
+    bottom: -20%; right: -10%;
+    width: 60vw; height: 60vw;
+    background: rgba(139, 92, 246, 0.15);
+    animation-delay: -5s;
+}
+
+.blob-3 {
+    top: 40%; left: 50%;
+    width: 40vw; height: 40vw;
+    background: rgba(16, 185, 129, 0.1);
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(5%, 5%) scale(1.1); }
+}
+
+/* Glassmorphism Utilities */
+.glass-panel, .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 20px;
+}
+
+/* Layout Container */
+.dashboard-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 100vh;
+}
+
+/* Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    border-radius: 100px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo-area i {
+    font-size: 2.5rem;
+    color: var(--accent);
+    filter: drop-shadow(0 0 10px var(--accent-glow));
+}
+
+.titles h1 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.titles span {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.search-container i.ph-map-pin {
+    color: var(--accent);
+}
+
+.search-container input {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    width: 160px;
+    outline: none;
+}
+
+.search-container input::placeholder {
+    color: rgba(255,255,255,0.4);
+}
+
+.search-container button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.search-container button:hover {
+    background: #2563eb;
+    transform: scale(1.05);
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--good);
+    letter-spacing: 0.05em;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--good);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--good);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.time-display {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    min-width: 90px;
+    text-align: right;
+}
+
+/* Main Content Grid */
+.dashboard-main {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 24px;
+    flex: 1;
+}
+
+.primary-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.secondary-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Common Widget Styles */
+.widget {
+    padding: 24px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.widget:hover {
+    border-color: rgba(255,255,255,0.15);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-header h2 {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.card-header i {
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.card-header i:hover { color: var(--text-primary); }
+
+/* Main AQI Card */
+.aqi-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.aqi-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    margin: 20px 0;
+}
+
+.circular-progress {
+    position: relative;
+    width: 160px;
+    height: 160px;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.bg-circle {
+    stroke: rgba(255, 255, 255, 0.05);
+}
+
+.p-circle {
+    stroke: var(--unhealthy-sg); /* Will be updated by JS */
+    stroke-dasharray: 439.8; /* 2 * pi * r (70) */
+    stroke-dashoffset: 439.8; /* Will be updated by JS */
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease-in-out, stroke 0.5s ease;
+}
+
+.aqi-value-container {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.aqi-value {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(to right, #fff, #cbd5e1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.aqi-unit {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.aqi-status h3 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--unhealthy-sg); /* Initial */
+    margin-bottom: 8px;
+    transition: color 0.5s ease;
+}
+
+.aqi-status p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Weather Card */
+.weather-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.weather-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.weather-item i {
+    font-size: 2rem;
+    color: var(--accent);
+}
+
+.w-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.w-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.w-value {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Chart Card */
+.graph-card {
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 8px;
+    background: rgba(0,0,0,0.2);
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.chart-controls button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.chart-controls button:hover {
+    color: var(--text-primary);
+}
+
+.chart-controls button.active {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-primary);
+}
+
+.chart-container {
+    flex: 1;
+    position: relative;
+    width: 100%;
+}
+
+/* Pollutants Grid */
+.pollutants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.p-card {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.p-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.p-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.p-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.p-value {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.p-unit {
+    font-size: 0.9rem;
+    font-family: var(--font-body);
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.p-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.p-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease-out, background-color 0.5s ease;
+}
+
+/* Dynamic Classes generated by JS */
+.status-good { color: var(--good) !important; }
+.status-good-bg { background-color: var(--good-bg); color: var(--good); }
+.bg-fill-good { background-color: var(--good); }
+
+.status-moderate { color: var(--moderate) !important; }
+.status-moderate-bg { background-color: var(--moderate-bg); color: var(--moderate); }
+.bg-fill-moderate { background-color: var(--moderate); }
+
+.status-unhealthy-sg { color: var(--unhealthy-sg) !important; }
+.status-unhealthy-sg-bg { background-color: var(--unhealthy-sg-bg); color: var(--unhealthy-sg); }
+.bg-fill-unhealthy-sg { background-color: var(--unhealthy-sg); }
+
+.status-unhealthy { color: var(--unhealthy) !important; }
+.status-unhealthy-bg { background-color: var(--unhealthy-bg); color: var(--unhealthy); }
+.bg-fill-unhealthy { background-color: var(--unhealthy); }
+
+.status-very-unhealthy { color: var(--very-unhealthy) !important; }
+.status-very-unhealthy-bg { background-color: var(--very-unhealthy-bg); color: var(--very-unhealthy); }
+.bg-fill-very-unhealthy { background-color: var(--very-unhealthy); }
+
+.status-hazardous { color: var(--hazardous) !important; }
+.status-hazardous-bg { background-color: var(--hazardous-bg); color: var(--hazardous); }
+.bg-fill-hazardous { background-color: var(--hazardous); }
+
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .dashboard-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .primary-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        gap: 16px;
+        border-radius: 20px;
+        padding: 20px;
+    }
+    
+    .primary-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .pollutants-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .pollutants-grid {
+        grid-template-columns: 1fr;
+    }
+}
